@@ -1,0 +1,4 @@
+repository "Galaxy Shooter@ec_game_company@cloud"
+  path "/"
+    br "/main"
+    co "/main"
