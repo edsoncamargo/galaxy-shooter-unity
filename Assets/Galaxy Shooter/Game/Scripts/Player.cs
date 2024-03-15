@@ -28,6 +28,12 @@ public class Player : MonoBehaviour {
     private UiManager _uiManager;
     private GameManager _gameManager;
 
+    private AudioSource _audioSource;
+    [SerializeField] private AudioClip _clip;
+
+    [SerializeField]
+    private GameObject[] _fireHurtGameObject;
+
     void Start() {
         Setup();
 
@@ -37,6 +43,8 @@ public class Player : MonoBehaviour {
         if (_uiManager != null) {
             _uiManager.UpdateLives(lifes);
         }
+
+        _audioSource = GetComponent<AudioSource>();
     }
 
 
@@ -111,6 +119,8 @@ public class Player : MonoBehaviour {
     }
 
     private void HandleShoot() {
+        _audioSource.Play();
+
         switch (power) {
             case "single":
             SingleShoot();
@@ -175,6 +185,10 @@ public class Player : MonoBehaviour {
                 _uiManager.UpdateLives(lifes);
             }
 
+            if (lifes > 0 && lifes < 3) {
+                _fireHurtGameObject[lifes == 2 ? 0 : 1].SetActive(true); 
+            }
+
             return;
         }
     }
@@ -184,10 +198,13 @@ public class Player : MonoBehaviour {
     }
 
     public void Explode() {
+        AudioSource.PlayClipAtPoint(_clip, Camera.main.transform.position);
         Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+
         if (_gameManager != null) {
             _gameManager.GameOver();
         }
+
         Destroy(gameObject);
     }
 }

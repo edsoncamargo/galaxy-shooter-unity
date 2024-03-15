@@ -10,6 +10,8 @@ public class PowerUp : MonoBehaviour
     private float minHorizontalArea = -8.0f;
     private float maxHorizontalArea = 8.0f;
 
+    [SerializeField] private AudioClip _clip;
+
     private void Start()
         {
             Respawn();
@@ -51,6 +53,8 @@ public class PowerUp : MonoBehaviour
 
     private void ApplyPowerUp(Player player)
     {
+        AudioSource.PlayClipAtPoint(_clip, Camera.main.transform.position);
+
         switch (tag)
         {
             case "Triple_Shoot_PowerUp":

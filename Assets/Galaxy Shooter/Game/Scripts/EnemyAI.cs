@@ -15,9 +15,15 @@ public class EnemyAI : MonoBehaviour {
 
     private UiManager _uiManager;
 
+    [SerializeField]
+    private AudioClip _clip;
+
     void Start() {
         Respawn();
-        _uiManager = GameObject.Find("Canvas").GetComponent<UiManager>();
+
+        if (_uiManager != null) {
+            _uiManager = GameObject.Find("Canvas").GetComponent<UiManager>();
+        }
     }
 
     void Update() {
@@ -69,6 +75,8 @@ public class EnemyAI : MonoBehaviour {
     }
 
     private void GenerateExplosion() {
+        AudioSource.PlayClipAtPoint(_clip, Camera.main.transform.position);
+
         if (_uiManager != null) {
             _uiManager.UpdateScore(10);
         }

@@ -17,7 +17,6 @@ public class SpawnManager : MonoBehaviour {
 
     void Start() {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        Debug.Log("ENTREI");
     }
 
     void Update() {
