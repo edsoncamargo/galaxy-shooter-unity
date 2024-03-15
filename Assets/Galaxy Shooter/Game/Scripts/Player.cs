@@ -1,8 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour
-{
+public class Player : MonoBehaviour {
     [SerializeField]
     private GameObject _laserPrefab;
     private float _fireRate = 0.25f;
@@ -26,20 +25,27 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _explosionPrefab;
 
-    void Start()
-    {
+    private UiManager _uiManager;
+    private GameManager _gameManager;
+
+    void Start() {
         Setup();
+
+        _uiManager = GameObject.Find("Canvas").GetComponent<UiManager>();
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        if (_uiManager != null) {
+            _uiManager.UpdateLives(lifes);
+        }
     }
 
-    void Setup()
-    {
+
+    void Setup() {
         _speed = _initialSpeed;
     }
 
-    void Update()
-    {
-        if (IsAlive())
-        {
+    void Update() {
+        if (IsAlive()) {
             HandleMovements();
             HandleLaser();
             return;
@@ -48,163 +54,140 @@ public class Player : MonoBehaviour
         Explode();
     }
 
-    private void HandleMovements()
-    {
+    private void HandleMovements() {
         HandleHorizontalMove();
         HandleVerticalMove();
         HandlePlayerBoundsX();
         HandlePlayerBoundY();
     }
 
-    private void HandleHorizontalMove()
-    {
+    private void HandleHorizontalMove() {
         _horizontalInput = Input.GetAxis("Horizontal");
         transform.Translate(Vector3.right * Time.deltaTime * _speed * _horizontalInput);
     }
 
-    private void HandleVerticalMove()
-    {
+    private void HandleVerticalMove() {
         _verticalInput = Input.GetAxis("Vertical");
         transform.Translate(Vector3.up * Time.deltaTime * _speed * _verticalInput);
     }
 
-    private void HandlePlayerBoundsX()
-    {
-        if (transform.position.x > 10f)
-        {
+    private void HandlePlayerBoundsX() {
+        if (transform.position.x > 10f) {
             transform.position = new Vector3(-10f, transform.position.y, 0);
-        }
-        else if (transform.position.x < -10f)
-        {
+        } else if (transform.position.x < -10f) {
             transform.position = new Vector3(10f, transform.position.y, 0);
         }
     }
 
-    private void HandlePlayerBoundY()
-    {
-        if (transform.position.y > 0)
-        {
+    private void HandlePlayerBoundY() {
+        if (transform.position.y > 0) {
             transform.position = new Vector3(transform.position.x, 0, 0);
-        }
-        else if (transform.position.y < -4.2f)
-        {
+        } else if (transform.position.y < -4.2f) {
             transform.position = new Vector3(transform.position.x, -4.2f, 0);
         }
     }
 
-    private void HandleLaser()
-    {
+    private void HandleLaser() {
         HandleShoots();
     }
 
-    private void HandleShoots()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0)) // Changing KeyCode.Mouse1 to KeyCode.Mouse0
+    private void HandleShoots() {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse1))
         {
-            if (HandleFireCooldown())
-            {
+            if (HandleFireCooldown()) {
                 HandleShoot();
             }
         }
     }
 
-    private bool HandleFireCooldown()
-    {
+    private bool HandleFireCooldown() {
         bool canFire = Time.time > _nextFire;
 
-        if (canFire)
-        {
+        if (canFire) {
             _nextFire = Time.time + _fireRate;
         }
 
         return canFire;
     }
 
-    private void HandleShoot()
-    {
-        switch (power)
-        {
+    private void HandleShoot() {
+        switch (power) {
             case "single":
-                SingleShoot();
-                break;
+            SingleShoot();
+            break;
             case "triple":
-                TripleShoots();
-                break;
+            TripleShoots();
+            break;
         }
     }
 
-    private void SingleShoot()
-    {
+    private void SingleShoot() {
         Instantiate(_laserPrefab, new Vector3(transform.position.x, transform.position.y + 0.88f, transform.position.z), Quaternion.identity);
     }
 
-    private void TripleShoots()
-    {
+    private void TripleShoots() {
         Instantiate(_tripleLaserPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
     }
 
-    public void ApplyTripleShootPowerUp()
-    {
+    public void ApplyTripleShootPowerUp() {
         power = "triple";
         StartCoroutine(RevokeTripleShootPowerUp());
     }
 
-    IEnumerator RevokeTripleShootPowerUp()
-    {
+    IEnumerator RevokeTripleShootPowerUp() {
         yield return new WaitForSeconds(5.0f);
         power = "single";
     }
 
-    public void ApplySpeedPowerUp()
-    {
+    public void ApplySpeedPowerUp() {
         _speed = _speed + 10.0f;
         StartCoroutine(RevokeSpeedPowerUp());
     }
 
-    IEnumerator RevokeSpeedPowerUp()
-    {
+    IEnumerator RevokeSpeedPowerUp() {
         yield return new WaitForSeconds(5.0f);
         _speed = _initialSpeed;
     }
 
-    public void ApplyShieldPowerUp()
-    {
+    public void ApplyShieldPowerUp() {
         _hasShield = true;
         _shieldGameObject.SetActive(true);
         StartCoroutine(RevokeShieldPowerUp());
     }
 
-    IEnumerator RevokeShieldPowerUp(float timer = 5.0f)
-    {
+    IEnumerator RevokeShieldPowerUp(float timer = 5.0f) {
         yield return new WaitForSeconds(timer);
         _hasShield = false;
         _shieldGameObject.SetActive(false);
     }
 
-    public void HandleCollidedWithTheEnemyShip()
-    {
-        if (_hasShield)
-            {
-                StartCoroutine(RevokeShieldPowerUp(0.0f));
-                return;
-            }
-           
+    public void HandleCollidedWithTheEnemyShip() {
+        if (_hasShield) {
+            StartCoroutine(RevokeShieldPowerUp(0.0f));
+            return;
+        }
 
-        if (IsAlive())
-            {
-                lifes--;
-                return;
+
+        if (IsAlive()) {
+            lifes--;
+
+            if (_uiManager != null) {
+                _uiManager.UpdateLives(lifes);
             }
+
+            return;
+        }
     }
 
-    public bool IsAlive() 
-        {
-            return lifes > 0;
-        }
+    public bool IsAlive() {
+        return lifes > 0;
+    }
 
-    public void Explode()
-        {
-            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+    public void Explode() {
+        Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        if (_gameManager != null) {
+            _gameManager.GameOver();
         }
+        Destroy(gameObject);
+    }
 }

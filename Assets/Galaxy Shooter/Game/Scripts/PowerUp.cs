@@ -6,6 +6,21 @@ public class PowerUp : MonoBehaviour
 {
     [SerializeField] private float speed = 2.0f;
 
+    private float initialVerticalArea = 6f;
+    private float minHorizontalArea = -8.0f;
+    private float maxHorizontalArea = 8.0f;
+
+    private void Start()
+        {
+            Respawn();
+        }
+
+    private void Respawn()
+        {
+            float randomHorizontalArea = Random.Range(minHorizontalArea, maxHorizontalArea);
+            transform.position = new Vector3(randomHorizontalArea, initialVerticalArea, 0);
+        }
+
     private void Update()
     {
         MovePowerUp();
