@@ -12,35 +12,26 @@ public class SpawnManager : MonoBehaviour {
     private int _lastPowerUpRespawnedIndex = -1;
 
     private GameManager _gameManager;
-    private bool _isGameOver = true;
-    private bool _isStart = false;
 
     void Start() {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        Respawn();
     }
 
-    void Update() {
-        if (_gameManager != null) {
-            _isGameOver = _gameManager.gameOver;
-
-            if (_isGameOver != true && _isStart == false) {
-                _isStart = true;
-                StartCoroutine(GenerateEnemies());
-                StartCoroutine(GeneratePowerUps());
-            }
-        }
+    public void Respawn() {
+        StartCoroutine(GenerateEnemies());
+        StartCoroutine(GeneratePowerUps());
     }
 
     IEnumerator GenerateEnemies() {
-        if (_isGameOver != true) {
+        while (_gameManager.gameOver == false) {
             Instantiate(enemyShipPrefab);
             yield return new WaitForSeconds(2.0f);
-            StartCoroutine(GenerateEnemies());
         }
     }
 
     IEnumerator GeneratePowerUps() {
-        if (_isGameOver != true) {
+        while (_gameManager.gameOver == false) {
             int powerUpRandomIndex = _lastPowerUpRespawnedIndex;
             do {
                 powerUpRandomIndex = Random.Range(0, powerUpsPrefab.Length);
@@ -50,7 +41,6 @@ public class SpawnManager : MonoBehaviour {
             _lastPowerUpRespawnedIndex = powerUpRandomIndex;
             Instantiate(powerUpsPrefab[powerUpRandomIndex]);
             yield return new WaitForSeconds(8.0f);
-            StartCoroutine(GeneratePowerUps());
         }
     }
 }

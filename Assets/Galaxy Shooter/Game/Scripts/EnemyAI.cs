@@ -14,21 +14,24 @@ public class EnemyAI : MonoBehaviour {
     private GameObject _explosionPrefab;
 
     private UiManager _uiManager;
+    private GameManager _gameManager;
 
     [SerializeField]
     private AudioClip _clip;
 
     void Start() {
         Respawn();
-
-        if (_uiManager != null) {
-            _uiManager = GameObject.Find("Canvas").GetComponent<UiManager>();
-        }
+        _uiManager = GameObject.Find("Canvas").GetComponent<UiManager>();
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     void Update() {
         HandleVerticalBounds();
         HandleMoveDown();
+
+        if (_gameManager.gameOver == true) {
+            DestroyShip();
+        }
     }
 
     private void HandleVerticalBounds() {
@@ -68,19 +71,24 @@ public class EnemyAI : MonoBehaviour {
                 return;
 
             player.HandleCollidedWithTheEnemyShip();
-            GenerateExplosion();
-            Destroy(gameObject);
+            DestroyShip();
             break;
         }
     }
 
     private void GenerateExplosion() {
         AudioSource.PlayClipAtPoint(_clip, Camera.main.transform.position);
+        Debug.Log(_uiManager);
 
         if (_uiManager != null) {
             _uiManager.UpdateScore(10);
         }
 
         Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+    }
+
+    private void DestroyShip() {
+        GenerateExplosion();
+        Destroy(gameObject);
     }
 }
