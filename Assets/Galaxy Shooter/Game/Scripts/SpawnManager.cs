@@ -8,6 +8,8 @@ public class SpawnManager : MonoBehaviour {
     private GameObject enemyShipPrefab;
     [SerializeField]
     private GameObject[] powerUpsPrefab;
+    [SerializeField]
+    private GameObject asteroidPrefab;
 
     private int _lastPowerUpRespawnedIndex = -1;
 
@@ -26,6 +28,7 @@ public class SpawnManager : MonoBehaviour {
     IEnumerator GenerateEnemies() {
         while (_gameManager.gameOver == false) {
             Instantiate(enemyShipPrefab);
+            Instantiate(asteroidPrefab);
             yield return new WaitForSeconds(2.0f);
         }
     }
@@ -33,6 +36,7 @@ public class SpawnManager : MonoBehaviour {
     IEnumerator GeneratePowerUps() {
         while (_gameManager.gameOver == false) {
             int powerUpRandomIndex = _lastPowerUpRespawnedIndex;
+
             do {
                 powerUpRandomIndex = Random.Range(0, powerUpsPrefab.Length);
             }

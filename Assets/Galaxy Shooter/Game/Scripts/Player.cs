@@ -100,8 +100,7 @@ public class Player : MonoBehaviour {
     }
 
     private void HandleShoots() {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse1))
-        {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse1)) {
             if (HandleFireCooldown()) {
                 HandleShoot();
             }
@@ -178,6 +177,10 @@ public class Player : MonoBehaviour {
         }
 
 
+        Demage();
+    }
+
+    public void Demage() {
         if (IsAlive()) {
             lifes--;
 
@@ -186,10 +189,8 @@ public class Player : MonoBehaviour {
             }
 
             if (lifes > 0 && lifes < 3) {
-                _fireHurtGameObject[lifes == 2 ? 0 : 1].SetActive(true); 
+                _fireHurtGameObject[lifes == 2 ? 0 : 1].SetActive(true);
             }
-
-            return;
         }
     }
 

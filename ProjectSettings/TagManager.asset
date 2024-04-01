@@ -10,6 +10,7 @@ TagManager:
   - Shield
   - Laser
   - Enemy
+  - Asteroid
   layers:
   - Default
   - TransparentFX

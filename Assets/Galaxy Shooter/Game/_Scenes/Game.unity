@@ -615,7 +615,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 2108302109
-  m_SortingOrder: 0
+  m_SortingOrder: 999
   m_TargetDisplay: 0
 --- !u!224 &531193599
 RectTransform:
@@ -987,6 +987,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7441440839570067768, guid: 13fea25f64caa424aad4650893248d7d, type: 3}
+      propertyPath: asteroidPrefab
+      value: 
+      objectReference: {fileID: 1089038175874421811, guid: f0de84fa122ae1d4198a80dabf3bbc05, type: 3}
     - target: {fileID: 8392977715040796570, guid: 13fea25f64caa424aad4650893248d7d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.9862947
