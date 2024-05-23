@@ -52,7 +52,7 @@ To run the app locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/edsoncamargo/galaxy-shooter-unity
+   git clone git@github.com:edsoncamargo/galaxy-shooter-unity.git
    cd your-path/galaxy-shooter-unity
    ```
 
